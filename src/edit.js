@@ -11,7 +11,7 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps } from '@wordpress/block-editor';
+import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -29,13 +29,28 @@ import './editor.scss';
  *
  * @return {Element} Element to render.
  */
+
 export default function Edit() {
+
+	const blockProps = useBlockProps();
+	const ALLOWED_BLOCKS = [ 'core/image', 'core/paragraph' ];
+	const MY_TEMPLATE = [
+		[ 'core/image', {} ],
+		[ 'core/heading', { placeholder: 'Book Title' } ],
+		[ 'core/paragraph', { placeholder: 'Summary' } ],
+	];
+
+
 	return (
-		<p { ...useBlockProps() }>
-			{ __(
-				'Gutenberg Inner Blocks – hello from the editor!',
-				'gutenberg-inner-blocks'
-			) }
-		</p>
+		<div { ...blockProps }>
+
+			<InnerBlocks 
+				allowedBlocks={ ALLOWED_BLOCKS } 
+				template={ MY_TEMPLATE }
+				templateLock="all"
+				directInsert={ true } 
+			/>
+
+		</div>
 	);
 }
